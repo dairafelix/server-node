@@ -11,13 +11,19 @@ import {
 const router = Router()
 
 router.get('/', (req, res) => {
-  const persons = getPersons()
-  res.send(persons)
+  const person = getPersons()
+  if (person) {
+    res.send(person)
+  }
+  res.status(404).send({ msg: 'Person not found' })
 })
 
 router.get('/:id', (req, res) => {
-  const person = getPerson(req.params.id)
-  res.send(person)
+  const newPerson = getPerson(req.params.id)
+  if (newPerson) {
+    res.status(201).send(newPerson)
+  }
+  res.status(400).send({ msg: 'Bad request' })
 })
 
 router.post('/', (req, res) => {
@@ -26,13 +32,19 @@ router.post('/', (req, res) => {
 })
 
 router.put('/:id', (req, res) => {
-  updatePerson(req.params.id, req.body)
-  res.send({ msg: `Person ${req.params.id} Updated` })
+  const updatedPerson = updatePerson(req.params.id, req.body)
+  if (updatedPerson) {
+    res.send(updatedPerson)
+  }
+  res.status(404).send({ msg: 'Person not found' })
 })
 
 router.delete('/:id', (req, res) => {
-  deletePerson(req.params.id)
-  res.send({ msg: `Person ${req.params.id} Deleted` }) 
+  const deleted = deletePerson(req.params.id)
+  if (deleted) {
+    res.send({ msg: `Person ${req.params.id} Deleted` })
+  }
+  res.status(404).send({ msg: 'Person not found' })
 })
 
 export default router
